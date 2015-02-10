@@ -17,7 +17,6 @@ RUN apt-get -y update
 RUN apt-get -y dist-upgrade
 
 # install ffmpeg
-RUN apt-get install -y build-essential git-core checkinstall yasm texi2html libvorbis-dev libx11-dev libvpx-dev libxfixes-dev zlib1g-dev pkg-config netcat libncurses5-dev
 ADD install-ffmpeg.sh ./
 RUN chmod +x install-ffmpeg.sh
 RUN ./install-ffmpeg.sh
