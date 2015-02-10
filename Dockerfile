@@ -73,6 +73,6 @@ RUN apt-get install -y bbb-demo
 EXPOSE 80 9123 1935
 
 #Add helper script to start bbb
-ADD scripts/bbb-start.sh /usr/bin/
+ADD bbb-start.sh /usr/bin/
 
 CMD ["/usr/bin/bbb-start.sh"]
