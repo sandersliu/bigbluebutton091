@@ -2,6 +2,11 @@ FROM sandersliu/ubuntu14
 MAINTAINER sandersliu sandersliu@hotmail.com
 # RUN echo "deb http://us.archive.ubuntu.com/ubuntu/ trusty multiverse" | sudo tee -a /etc/apt/sources.list
 # RUN apt-get install -y language-pack-en vim wget
+RUN cat /etc/default/locale
+RUN uname -m
+RUN cat /etc/lsb-release
+RUN grep "multiverse" /etc/apt/sources.list
+
 RUN apt-get install -y vim wget
 #RUN update-locale LANG=en_US.UTF-8
 # RUN dpkg-reconfigure locales
@@ -29,6 +34,8 @@ RUN ffmpeg -version
 #install BigBlueButton
 RUN apt-get -y update
 RUN apt-get install -y bigbluebutton
+RUN echo "------- build agin apt-get install bigbluebutton ------------------"
+RUN apt-get install bigbluebutton
 
 #install bbb demo
 RUN apt-get install -y bbb-demo
