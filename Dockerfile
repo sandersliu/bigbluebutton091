@@ -1,7 +1,6 @@
-FROM ubuntu:10.04
-MAINTAINER Juan Luis Baptiste juan.baptiste@gmail.com
-
-RUN apt-get -y update
+FROM sandersliu/ubuntu14
+MAINTAINER sandersliu sandersliu@hotmail.com
+RUN echo "deb http://us.archive.ubuntu.com/ubuntu/ trusty multiverse" | sudo tee -a /etc/apt/sources.list
 RUN apt-get install -y language-pack-en vim wget
 RUN update-locale LANG=en_US.UTF-8
 RUN dpkg-reconfigure locales
@@ -10,45 +9,66 @@ RUN dpkg-reconfigure locales
 RUN wget http://ubuntu.bigbluebutton.org/bigbluebutton.asc -O- | apt-key add -
 
 # Add the BigBlueButton repository URL and ensure the multiverse is enabled
-RUN echo "deb http://ubuntu.bigbluebutton.org/lucid_dev_081/ bigbluebutton-lucid main" | tee /etc/apt/sources.list.d/bigbluebutton.list
+RUN echo "deb http://ubuntu.bigbluebutton.org/trusty-090/ bigbluebutton-trusty main" | tee /etc/apt/sources.list.d/bigbluebutton.list
 
 #Add multiverse repo
 RUN echo "deb http://us.archive.ubuntu.com/ubuntu/ lucid multiverse" | tee -a /etc/apt/sources.list
 RUN apt-get -y update
 RUN apt-get -y dist-upgrade
 
-#Install LibreOffice
-RUN wget http://bigbluebutton.googlecode.com/files/openoffice.org_1.0.4_all.deb
-RUN dpkg -i openoffice.org_1.0.4_all.deb
-RUN apt-get install -y python-software-properties
-RUN apt-add-repository ppa:libreoffice/libreoffice-4-0
+# install ffmpeg
+RUN apt-get install -y build-essential git-core checkinstall yasm texi2html libvorbis-dev libx11-dev libvpx-dev libxfixes-dev zlib1g-dev pkg-config netcat libncurses5-dev
+RUN FFMPEG_VERSION=2.3.3
+RUN cd /usr/local/src
+RUN if [ ! -d "/usr/local/src/ffmpeg-${FFMPEG_VERSION}" ]; then wget "http://ffmpeg.org/releases/ffmpeg-${FFMPEG_VERSION}.tar.bz2";  tar -xjf "ffmpeg-${FFMPEG_VERSION}.tar.bz2" fi
+RUN cd "ffmpeg-${FFMPEG_VERSION}"
+RUN ./configure --enable-version3 --enable-postproc --enable-libvorbis --enable-libvpx
+RUN make
+RUN checkinstall --pkgname=ffmpeg --pkgversion="5:${FFMPEG_VERSION}" --backup=no --deldoc=yes --default
+RUN chmod +x install-ffmpeg.sh
+RUN RUN ./install-ffmpeg.sh
+
+#install BigBlueButton
 RUN apt-get -y update
-RUN apt-get install -y libreoffice-common libreoffice
+RUN apt-get install -y bigbluebutton
+RUN apt-get install -y bigbluebutton
+
+#install bbb demo
+RUN apt-get install -y bbb-demo
+
+
+#Install LibreOffice
+# RUN wget http://bigbluebutton.googlecode.com/files/openoffice.org_1.0.4_all.deb
+# RUN dpkg -i openoffice.org_1.0.4_all.deb
+# RUN apt-get install -y python-software-properties
+# RUN apt-add-repository ppa:libreoffice/libreoffice-4-0
+# RUN apt-get -y update
+# RUN apt-get install -y libreoffice-common libreoffice
 
 #Install required Ruby version
-RUN apt-get install -y libffi5 libreadline5 libyaml-0-2
-RUN wget https://bigbluebutton.googlecode.com/files/ruby1.9.2_1.9.2-p290-1_amd64.deb
-RUN dpkg -i ruby1.9.2_1.9.2-p290-1_amd64.deb
-RUN update-alternatives --install /usr/bin/ruby ruby /usr/bin/ruby1.9.2 500 \
-                         --slave /usr/bin/ri ri /usr/bin/ri1.9.2 \
-                         --slave /usr/bin/irb irb /usr/bin/irb1.9.2 \
-                         --slave /usr/bin/erb erb /usr/bin/erb1.9.2 \
-                         --slave /usr/bin/rdoc rdoc /usr/bin/rdoc1.9.2
-RUN update-alternatives --install /usr/bin/gem gem /usr/bin/gem1.9.2 500
+# RUN apt-get install -y libffi5 libreadline5 libyaml-0-2
+# RUN wget https://bigbluebutton.googlecode.com/files/ruby1.9.2_1.9.2-p290-1_amd64.deb
+# RUN dpkg -i ruby1.9.2_1.9.2-p290-1_amd64.deb
+# RUN update-alternatives --install /usr/bin/ruby ruby /usr/bin/ruby1.9.2 500 \
+#                         --slave /usr/bin/ri ri /usr/bin/ri1.9.2 \
+#                         --slave /usr/bin/irb irb /usr/bin/irb1.9.2 \
+#                         --slave /usr/bin/erb erb /usr/bin/erb1.9.2 \
+#                         --slave /usr/bin/rdoc rdoc /usr/bin/rdoc1.9.2
+# RUN update-alternatives --install /usr/bin/gem gem /usr/bin/gem1.9.2 500
 
 #Install ffmpeg
-RUN apt-get install -y build-essential git-core checkinstall yasm texi2html libvorbis-dev libx11-dev libxfixes-dev zlib1g-dev pkg-config
-ADD deb/ffmpeg_5:2.0.1-1_amd64.deb .
-RUN dpkg -i ffmpeg_5:2.0.1-1_amd64.deb
+# RUN apt-get install -y build-essential git-core checkinstall yasm texi2html libvorbis-dev libx11-dev libxfixes-dev zlib1g-dev pkg-config
+# ADD deb/ffmpeg_5:2.0.1-1_amd64.deb .
+# RUN dpkg -i ffmpeg_5:2.0.1-1_amd64.deb
 
 #Install Tomcat prior to bbb installation
-RUN apt-get install -y tomcat6
+# RUN apt-get install -y tomcat6
 
 #Replace init script, installed one is broken
-ADD scripts/tomcat6 /etc/init.d/
+# ADD scripts/tomcat6 /etc/init.d/
 
 #Install BigBlueButton
-RUN su - -c "apt-get install -y bigbluebutton bbb-demo" 
+# RUN su - -c "apt-get install -y bigbluebutton bbb-demo" 
 
 EXPOSE 80 9123 1935
 
