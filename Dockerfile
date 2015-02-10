@@ -18,15 +18,9 @@ RUN apt-get -y dist-upgrade
 
 # install ffmpeg
 RUN apt-get install -y build-essential git-core checkinstall yasm texi2html libvorbis-dev libx11-dev libvpx-dev libxfixes-dev zlib1g-dev pkg-config netcat libncurses5-dev
-RUN FFMPEG_VERSION=2.3.3
-RUN cd /usr/local/src
-RUN if [ ! -d "/usr/local/src/ffmpeg-${FFMPEG_VERSION}" ]; then wget "http://ffmpeg.org/releases/ffmpeg-${FFMPEG_VERSION}.tar.bz2";  tar -xjf "ffmpeg-${FFMPEG_VERSION}.tar.bz2" fi
-RUN cd "ffmpeg-${FFMPEG_VERSION}"
-RUN ./configure --enable-version3 --enable-postproc --enable-libvorbis --enable-libvpx
-RUN make
-RUN checkinstall --pkgname=ffmpeg --pkgversion="5:${FFMPEG_VERSION}" --backup=no --deldoc=yes --default
+ADD install-ffmpeg.sh ./
 RUN chmod +x install-ffmpeg.sh
-RUN RUN ./install-ffmpeg.sh
+RUN ./install-ffmpeg.sh
 
 #install BigBlueButton
 RUN apt-get -y update
