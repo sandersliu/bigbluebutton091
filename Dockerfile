@@ -24,7 +24,6 @@ RUN ./install-ffmpeg.sh
 #install BigBlueButton
 RUN apt-get -y update
 RUN apt-get install -y bigbluebutton
-RUN apt-get install -y bigbluebutton
 
 #install bbb demo
 RUN apt-get install -y bbb-demo
