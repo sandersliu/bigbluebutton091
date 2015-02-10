@@ -20,6 +20,7 @@ RUN apt-get -y dist-upgrade
 ADD install-ffmpeg.sh ./
 RUN chmod +x install-ffmpeg.sh
 RUN ./install-ffmpeg.sh
+RUN ffmpeg -version
 
 #install BigBlueButton
 RUN apt-get -y update
