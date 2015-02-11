@@ -9,8 +9,8 @@ RUN uname -m
 RUN cat /etc/lsb-release
 RUN grep "multiverse" /etc/apt/sources.list
 
-RUN apt-get -y update
-RUN apt-get -y dist-upgrade
+# RUN apt-get -y update
+# RUN apt-get -y dist-upgrade
 
 # Add the BigBlueButton key
 RUN wget http://ubuntu.bigbluebutton.org/bigbluebutton.asc -O- | apt-key add -
@@ -30,10 +30,12 @@ RUN ./install-ffmpeg.sh
 RUN ffmpeg -version
 
 #install BigBlueButton
-RUN apt-get -y update
+# RUN apt-get -y update
+RUN echo "------- build agin apt-get install -y bigbluebutton pos = 1------------------"
 RUN apt-get install -y bigbluebutton
-RUN echo "------- build agin apt-get install bigbluebutton ------------------"
-RUN apt-get install bigbluebutton
+RUN echo "------- build agin apt-get install -y bigbluebutton pos = 2------------------"
+RUN apt-get install -y bigbluebutton
+RUN echo "------- build agin apt-get install -y bigbluebutton pos = 3------------------"
 
 #install bbb demo
 RUN apt-get install -y bbb-demo
