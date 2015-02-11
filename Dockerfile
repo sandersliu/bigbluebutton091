@@ -1,7 +1,7 @@
 FROM sandersliu/ubuntu14
 MAINTAINER sandersliu sandersliu@hotmail.com
 # RUN echo "deb http://us.archive.ubuntu.com/ubuntu/ trusty multiverse" | sudo tee -a /etc/apt/sources.list
-RUN apt-get install -y language-pack-en vim wget
+RUN sudo apt-get install -y language-pack-en vim wget
 RUN update-locale LANG=en_US.UTF-8
 RUN dpkg-reconfigure locales
 RUN cat /etc/default/locale
@@ -9,18 +9,19 @@ RUN uname -m
 RUN cat /etc/lsb-release
 RUN grep "multiverse" /etc/apt/sources.list
 
-# RUN apt-get -y update
-# RUN apt-get -y dist-upgrade
+RUN sudo apt-get -y update
+RUN sudo apt-get -y dist-upgrade
 
 # Add the BigBlueButton key
-RUN wget http://ubuntu.bigbluebutton.org/bigbluebutton.asc -O- | apt-key add -
+RUN wget http://ubuntu.bigbluebutton.org/bigbluebutton.asc -O- | sudo apt-key add -
 
 # Add the BigBlueButton repository URL and ensure the multiverse is enabled
-RUN echo "deb http://ubuntu.bigbluebutton.org/trusty-090/ bigbluebutton-trusty main" | tee /etc/apt/sources.list.d/bigbluebutton.list
+RUN echo "deb http://ubuntu.bigbluebutton.org/trusty-090/ bigbluebutton-trusty main" | sudo tee /etc/apt/sources.list.d/bigbluebutton.list
+RUN cat /etc/apt/sources.list.d/bigbluebutton.list
 
 #Add multiverse repo
 # RUN echo "deb http://us.archive.ubuntu.com/ubuntu/ lucid multiverse" | tee -a /etc/apt/sources.list
-RUN apt-get -y update
+RUN sudo apt-get -y update
 # RUN apt-get -y dist-upgrade
 
 # install ffmpeg
@@ -30,15 +31,15 @@ RUN ./install-ffmpeg.sh
 RUN ffmpeg -version
 
 #install BigBlueButton
-# RUN apt-get -y update
+RUN apt-get -y update
 RUN echo "------- build agin apt-get install -y bigbluebutton pos = 1------------------"
-RUN apt-get install -y bigbluebutton
+RUN sudo apt-get install -y bigbluebutton
 RUN echo "------- build agin apt-get install -y bigbluebutton pos = 2------------------"
-RUN apt-get install -y bigbluebutton
+RUN sudo apt-get install -y bigbluebutton
 RUN echo "------- build agin apt-get install -y bigbluebutton pos = 3------------------"
 
 #install bbb demo
-RUN apt-get install -y bbb-demo
+RUN sudo apt-get install -y bbb-demo
 
 
 #Install LibreOffice
