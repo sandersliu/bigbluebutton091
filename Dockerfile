@@ -1,7 +1,7 @@
 FROM sandersliu/ubuntu14
 MAINTAINER sandersliu sandersliu@hotmail.com
 # RUN echo "deb http://us.archive.ubuntu.com/ubuntu/ trusty multiverse" | sudo tee -a /etc/apt/sources.list
-RUN sudo apt-get install -y language-pack-en vim wget
+RUN sudo apt-get install -y language-pack-en vim wget curl
 RUN update-locale LANG=en_US.UTF-8
 RUN dpkg-reconfigure locales
 RUN cat /etc/default/locale
@@ -30,13 +30,16 @@ RUN chmod +x install-ffmpeg.sh
 RUN ./install-ffmpeg.sh
 RUN ffmpeg -version
 
+#Install Tomcat prior to bbb installation
+RUN apt-get install -y tomcat7 && apt-get -y clean
+
 #install BigBlueButton
 RUN apt-get -y update
 RUN echo "------- build agin apt-get install -y bigbluebutton pos = 1------------------"
-RUN sudo apt-get install -y bigbluebutton
+RUN su - -c "apt-get install -y bigbluebutton && apt-get -y clean"
 RUN echo "------- build agin apt-get install -y bigbluebutton pos = 2------------------"
-RUN sudo apt-get install -y bigbluebutton
-RUN echo "------- build agin apt-get install -y bigbluebutton pos = 3------------------"
+# RUN sudo apt-get install -y bigbluebutton
+# RUN echo "------- build agin apt-get install -y bigbluebutton pos = 3------------------"
 
 #install bbb demo
 RUN sudo apt-get install -y bbb-demo
